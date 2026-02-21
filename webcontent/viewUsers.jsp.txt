@@ -1,0 +1,52 @@
+<%@ page import="java.sql.*" %>
+<%
+    String role = (String) session.getAttribute("role");
+    if (role == null || !role.equals("admin")) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View Users</title>
+</head>
+<body>
+
+<h2>All Registered Users</h2>
+
+<table border="1">
+<tr>
+    <th>ID</th>
+    <th>Username</th>
+    <th>Role</th>
+</tr>
+
+<%
+    try {
+        Connection con = DBConnection.getConnection();
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery("SELECT * FROM users");
+
+        while (rs.next()) {
+%>
+<tr>
+    <td><%= rs.getInt("id") %></td>
+    <td><%= rs.getString("username") %></td>
+    <td><%= rs.getString("role") %></td>
+</tr>
+<%
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+%>
+
+</table>
+
+<br>
+<a href="admin.jsp">Back</a>
+
+</body>
+</html>

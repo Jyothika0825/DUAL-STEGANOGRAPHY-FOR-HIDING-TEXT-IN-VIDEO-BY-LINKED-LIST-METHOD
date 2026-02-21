@@ -1,0 +1,42 @@
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.servlet.annotation.MultipartConfig;
+import java.sql.*;
+
+@MultipartConfig
+public class UploadServlet extends HttpServlet {
+
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+
+        String message = request.getParameter("message");
+        String key = request.getParameter("key");
+
+        Part filePart = request.getPart("video");
+        String fileName = filePart.getSubmittedFileName();
+
+        String uploadPath = getServletContext().getRealPath("") + File.separator + "uploads";
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) uploadDir.mkdir();
+
+        filePart.write(uploadPath + File.separator + fileName);
+
+        try {
+            String encryptedMessage = Aesutil.encrypt(message, key);
+
+            Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+                "INSERT INTO videos(filename, secret_data) VALUES(?, ?)"
+            );
+            ps.setString(1, fileName);
+            ps.setString(2, encryptedMessage);
+            ps.executeUpdate();
+
+            response.getWriter().println("Video uploaded & message encrypted successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

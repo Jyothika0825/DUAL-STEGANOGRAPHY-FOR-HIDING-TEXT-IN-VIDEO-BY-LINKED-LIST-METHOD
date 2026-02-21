@@ -1,0 +1,8 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50),
+    password VARCHAR(50),
+    role VARCHAR(20)
+);INSERT INTO users VALUES (1,'admin','admin123','admin');
+INSERT INTO users VALUES (2,'owner','owner123','owner');
+INSERT INTO users VALUES (3,'user','user123','user');

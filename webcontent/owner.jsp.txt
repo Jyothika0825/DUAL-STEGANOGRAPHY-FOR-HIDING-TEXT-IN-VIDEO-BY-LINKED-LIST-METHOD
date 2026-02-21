@@ -1,0 +1,31 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
+<%
+    String role = (String) session.getAttribute("role");
+    if (role == null || !role.equals("owner")) {
+        response.sendRedirect("login.jsp");
+        return;
+    }
+%>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Owner Dashboard</title>
+</head>
+<body>
+
+<h2>Welcome Owner</h2>
+
+<form action="UploadServlet" method="post" enctype="multipart/form-data">
+    Select Video: <input type="file" name="video" required /><br><br>
+    Secret Message: <textarea name="message"></textarea><br><br>
+    Encryption Key: <input type="text" name="key" required /><br><br>
+
+    <input type="submit" value="Embed & Upload" />
+</form>
+
+<br>
+<a href="logout.jsp">Logout</a>
+
+</body>
+</html>
